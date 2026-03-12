@@ -31,6 +31,9 @@ class Shape:
     metadata: Optional[Dict[str, Any]] = None
     id: Optional[str] = None
     anchor_id: Optional[str] = None
+    confidence: float = 1.0
+    hit_count: int = 0
+    parent_id: Optional[str] = None
 
     def __post_init__(self):
         if self.id is None:
@@ -88,6 +91,17 @@ class Shape:
         dist_to_max = maxs - vals
         return float(np.min(np.minimum(dist_to_min, dist_to_max)))
 
+    def volume(self) -> float:
+        """Calculate the hypervolume of this shape."""
+        if not self.dimensions:
+            return 0.0
+        ranges = np.array([d.max_value - d.min_value for d in self.dimensions.values()])
+        return float(np.prod(ranges))
+
+    def record_hit(self) -> None:
+        """Record a containment hit (mutable counter only)."""
+        self.hit_count += 1
+
     def to_dict(self) -> Dict:
         """Serialize for storage/anchoring."""
         return {
@@ -97,7 +111,10 @@ class Shape:
                 for name, d in self.dimensions.items()
             },
             "metadata": self.metadata,
-            "anchor_id": self.anchor_id
+            "anchor_id": self.anchor_id,
+            "confidence": self.confidence,
+            "hit_count": self.hit_count,
+            "parent_id": self.parent_id,
         }
 
     @classmethod
@@ -111,7 +128,10 @@ class Shape:
             dimensions=dimensions,
             metadata=data.get("metadata"),
             id=data.get("id"),
-            anchor_id=data.get("anchor_id")
+            anchor_id=data.get("anchor_id"),
+            confidence=data.get("confidence", 1.0),
+            hit_count=data.get("hit_count", 0),
+            parent_id=data.get("parent_id"),
         )
 
 
