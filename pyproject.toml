@@ -1,10 +1,11 @@
 [project]
 name = "doorway-memory"
 version = "0.1.0"
-description = "Geometric memory engine for AI"
+description = "Geometric memory engine. Store knowledge as shapes. Retrieve by containment. Verify by chain."
 readme = "README.md"
 requires-python = ">=3.9"
-license = "Apache-2.0"
+license = {text = "Apache-2.0"}
+authors = [{name = "Luke H"}]
 
 dependencies = [
     "numpy>=1.20.0",
@@ -12,8 +13,9 @@ dependencies = [
 
 [project.optional-dependencies]
 anchor = ["xycore>=0.1.0"]
+database = ["sqlalchemy>=2.0.0"]
 supabase = ["supabase>=1.0.0"]
-full = ["xycore>=0.1.0", "supabase>=1.0.0"]
+full = ["xycore>=0.1.0", "sqlalchemy>=2.0.0", "supabase>=1.0.0"]
 
 [project.urls]
 Homepage = "https://doorwayagi.com"
