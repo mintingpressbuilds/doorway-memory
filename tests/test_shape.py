@@ -115,3 +115,65 @@ def test_extract_point_minimal():
 def test_extract_point_unknown_structure():
     point = extract_point({"structure": "unknown_type"})
     assert point["structure_type"] == 0.0
+
+
+# --- Confidence / Phase 2 additions ---
+
+def test_confidence_default():
+    shape = Shape(dimensions={"x": Dimension("x", 0.0, 10.0)})
+    assert shape.confidence == 1.0
+
+
+def test_confidence_custom():
+    shape = Shape(dimensions={"x": Dimension("x", 0.0, 10.0)}, confidence=0.5)
+    assert shape.confidence == 0.5
+
+
+def test_hit_count_default():
+    shape = Shape(dimensions={"x": Dimension("x", 0.0, 10.0)})
+    assert shape.hit_count == 0
+
+
+def test_record_hit():
+    shape = Shape(dimensions={"x": Dimension("x", 0.0, 10.0)})
+    shape.record_hit()
+    shape.record_hit()
+    assert shape.hit_count == 2
+
+
+def test_parent_id():
+    parent = Shape(dimensions={"x": Dimension("x", 0.0, 10.0)})
+    child = Shape(dimensions={"x": Dimension("x", 0.0, 12.0)}, parent_id=parent.id)
+    assert child.parent_id == parent.id
+
+
+def test_volume_1d():
+    shape = Shape(dimensions={"x": Dimension("x", 0.0, 10.0)})
+    assert shape.volume() == 10.0
+
+
+def test_volume_2d():
+    shape = Shape(dimensions={
+        "x": Dimension("x", 0.0, 10.0),
+        "y": Dimension("y", 0.0, 5.0)
+    })
+    assert shape.volume() == 50.0
+
+
+def test_volume_empty():
+    shape = Shape(dimensions={})
+    assert shape.volume() == 0.0
+
+
+def test_confidence_serialization_roundtrip():
+    shape = Shape(
+        dimensions={"x": Dimension("x", 0.0, 10.0)},
+        confidence=0.75,
+        hit_count=3,
+        parent_id="abc123"
+    )
+    data = shape.to_dict()
+    restored = Shape.from_dict(data)
+    assert restored.confidence == 0.75
+    assert restored.hit_count == 3
+    assert restored.parent_id == "abc123"
