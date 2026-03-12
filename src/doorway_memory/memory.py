@@ -83,5 +83,13 @@ class Memory:
             shape.anchor_id = anchor.id
             yield shape
 
+    def scan_and_store(self, source: Any, name: str = "auto") -> int:
+        """Scan a data source and store all extracted shapes. Returns count stored."""
+        from .scanner import scan
+        result = scan(source, name=name)
+        for shape in result.shapes:
+            self.store(shape)
+        return len(result.shapes)
+
     def count(self) -> int:
         return self.library.count()
