@@ -1,0 +1,27 @@
+[project]
+name = "doorway-memory"
+version = "0.1.0"
+description = "Geometric memory engine for AI"
+readme = "README.md"
+requires-python = ">=3.9"
+license = "Apache-2.0"
+
+dependencies = [
+    "numpy>=1.20.0",
+]
+
+[project.optional-dependencies]
+anchor = ["xycore>=0.1.0"]
+supabase = ["supabase>=1.0.0"]
+full = ["xycore>=0.1.0", "supabase>=1.0.0"]
+
+[project.urls]
+Homepage = "https://doorwayagi.com"
+Repository = "https://github.com/mintingpressbuilds/doorway-memory"
+
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
