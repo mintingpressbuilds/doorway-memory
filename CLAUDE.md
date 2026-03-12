@@ -4,7 +4,7 @@
 
 Geometric memory engine. Standalone Python package. Store knowledge as shapes with dimensional boundaries. Retrieve by containment testing. Verify by cryptographic chain.
 
-**This is not part of Doorway's reasoning engine.** It's a standalone package that anyone can use for any system. It does not import doorway, pruv, or any Doorway-specific code. xycore is an optional dependency for anchoring.
+**This is not part of Doorway’s reasoning engine.** It’s a standalone package that anyone can use for any system. It does not import doorway, pruv, or any Doorway-specific code. xycore is an optional dependency for anchoring.
 
 ## Package Structure
 
@@ -29,7 +29,8 @@ doorway-memory/
 │       ├── decay.py          # Knowledge fading + archive
 │       ├── narrative.py      # Trajectories + prediction + common paths
 │       ├── void_map.py       # Negative space characterization
-│       └── emergence.py      # Tier 2 detection, GCS, IS
+│       ├── emergence.py      # Tier 2 detection, GCS, IS
+│       └── scanner.py        # Auto shape extraction from existing systems
 └── tests/
     ├── __init__.py
     ├── test_shape.py
@@ -42,7 +43,8 @@ doorway-memory/
     ├── test_decay.py
     ├── test_narrative.py
     ├── test_void_map.py
-    └── test_emergence.py
+    ├── test_emergence.py
+    └── test_scanner.py
 ```
 
 ## Commands
@@ -111,16 +113,16 @@ twine upload dist/*
 ### Error Handling
 
 - `ImportError` with helpful message when optional dep is missing
-- Never silently fail — if xycore isn't installed and anchoring is requested, raise
-- Return `None` or empty list for no-result queries, don't raise
+- Never silently fail — if xycore isn’t installed and anchoring is requested, raise
+- Return `None` or empty list for no-result queries, don’t raise
 
 ## What NOT To Do
 
 - Do NOT import from doorway, pruv, or any Doorway package
-- Do NOT add authentication or user management (that's namespace.py, coming later)
+- Do NOT add authentication or user management (that’s namespace.py, coming later)
 - Do NOT use localStorage, databases, or external services in the base layer — file and memory backends only (supabase is optional)
 - Do NOT modify pyproject.toml dependencies without checking this file
-- Do NOT use print() for logging — use Python's logging module if needed
+- Do NOT use print() for logging — use Python’s logging module if needed
 - Do NOT hardcode thresholds inside functions — use module-level constants
 
 ## Build Order
@@ -130,7 +132,8 @@ Follow BLUEPRINT.md phases strictly. Do not skip ahead.
 1. Phase 1: shape → intersect → library → anchor → memory
 1. Phase 2: growth → overlap → decay → narrative → confidence
 1. Phase 3: merge → void_map → emergence
-1. Phase 4: integration + full test suite + README
+1. Phase 4: scanner
+1. Phase 5: integration + full test suite + README + publish
 
 Each phase must have all tests passing before starting the next phase.
 
@@ -156,11 +159,11 @@ Functions that need xycore must check `HAS_XYCORE` and raise `ImportError` with 
 
 ### Memory Class Is The Public API
 
-Users interact with `Memory`. They should not need to import growth, decay, overlap, merge, void_map, or emergence directly. Memory orchestrates all mechanics internally. The `__init__.py` exports `Memory`, `Shape`, `Dimension`, and `Library` — that's the public surface.
+Users interact with `Memory`. They should not need to import growth, decay, overlap, merge, void_map, or emergence directly. Memory orchestrates all mechanics internally. The `__init__.py` exports `Memory`, `Shape`, `Dimension`, and `Library` — that’s the public surface.
 
 ### Shapes Are Immutable After Creation
 
-When growth expands a shape, it creates a new Shape with a new ID. The old shape is archived. When decay shrinks a shape, same thing. When merge fuses shapes, same thing. Shapes don't mutate in place. The chain records the lineage.
+When growth expands a shape, it creates a new Shape with a new ID. The old shape is archived. When decay shrinks a shape, same thing. When merge fuses shapes, same thing. Shapes don’t mutate in place. The chain records the lineage.
 
 ## Repository
 
