@@ -1,9 +1,0 @@
-pyproject.toml
-src/doorway_memory/__init__.py
-src/doorway_memory/shape.py
-src/doorway_memory.egg-info/PKG-INFO
-src/doorway_memory.egg-info/SOURCES.txt
-src/doorway_memory.egg-info/dependency_links.txt
-src/doorway_memory.egg-info/requires.txt
-src/doorway_memory.egg-info/top_level.txt
-tests/test_shape.py
